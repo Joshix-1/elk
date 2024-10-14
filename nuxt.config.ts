@@ -1,9 +1,9 @@
+import type { BuildInfo } from './types'
 import { createResolver, useNuxt } from '@nuxt/kit'
 import { isCI, isDevelopment, isWindows } from 'std-env'
 import { isPreview } from './config/env'
-import { pwa } from './config/pwa'
-import type { BuildInfo } from './types'
 import { currentLocales } from './config/i18n'
+import { pwa } from './config/pwa'
 
 const { resolve } = createResolver(import.meta.url)
 
@@ -300,7 +300,7 @@ export default defineNuxtConfig({
         'upgrade-insecure-requests': true,
       },
       permissionsPolicy: {
-        fullscreen: ['\'self\'', 'https:', 'http:'],
+        fullscreen: '*',
       },
     },
     rateLimiter: false,

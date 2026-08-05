@@ -6,7 +6,7 @@ Refer also to https://github.com/antfu/contribute.
 
 For guidelines on contributing to the documentation, refer to the [docs README](./docs/README.md).
 
-### Local Setup
+## Local Setup
 
 To develop and test the Elk package:
 
@@ -22,11 +22,11 @@ If you have [nvm](https://github.com/nvm-sh/nvm), you can run `nvm i` to install
 git checkout -b my-new-branch
 ```
 
-1. Run `pnpm i` in Elk's root folder
+5. Run `pnpm i` in Elk's root folder
 
-2. Run `pnpm nuxi prepare` in Elk's root folder
+6. Run `pnpm nuxi prepare` in Elk's root folder
 
-3. Run `pnpm dev` in Elk's root folder to start dev server or `pnpm dev:mocked` to start dev server with `@elkdev@universeodon.com` user.
+7. Run `pnpm dev` in Elk's root folder to start dev server or `pnpm dev:mocked` to start dev server with `@elkdev@universeodon.com` user.
 
 We recommend installing [ni](https://github.com/antfu/ni#ni), that will use the right package manager in each of your projects. If `ni` is installed, you can instead run:
 
@@ -35,15 +35,18 @@ ni
 nr dev
 ```
 
-### Testing
+## Testing
 
 Elk uses [Vitest](https://vitest.dev). You can run the test suite with:
 
-```
+```shell
+pnpm test
+
+# or if you installed ni
 nr test
 ```
 
-### Running PWA on dev server
+## Running PWA on dev server
 
 In order to run Elk with PWA enabled, run `pnpm dev:pwa` in Elk's root folder to start dev server or `pnpm dev:mocked:pwa` to start dev server with `@elkdev@universeodon.com` user.
 
@@ -58,15 +61,41 @@ If not using private browsing mode, you will need to uninstall the PWA applicati
 - Click on `Clear site data` button
 - Go to `Application > Service Workers` and check if the current `service worker` is missing or has the state `deleted` or `redundant`
 
-## CI errors
+## Before Submitting Pull Requests
 
-Sometimes when you push your changes to create a new pull request (PR), the CI can fail, but we cannot check the logs to see what went wrong.
-
-If you are getting **Semantic Pull Request** error, please check the [Semantic Pull Request](https://www.conventionalcommits.org/en/v1.0.0/#summary) documentation.
-
-You can run the following commands on your local environment to fix CI errors:
+When you are ready to submit a Pull Request (PR), run the following commands on your local environment to fix CI errors:
 - `pnpm test:unit` to run unit tests, maybe you also need to update snapshots
 - `pnpm test:typecheck` to run TypeScript checks run on CI
+
+Sometimes when you push your changes to create a new pull request (PR), the CI can fail, but the reviewers cannot see the logs to check what went wrong.
+
+If you get a **Semantic Pull Request** error, please check the [Semantic Pull Request](https://www.conventionalcommits.org/en/v1.0.0/#summary) documentation.
+
+## Using AI assistance
+
+Elk welcomes AI assistance. We follow the two rules from [antfu's contribution guide](https://github.com/antfu/contribute):
+
+- **Never let an LLM think for you.** You may use AI to help write code or tests, but always understand what it produced before contributing it, and take responsibility for it. PRs we consider fully "vibe-coded" — opened without the author understanding the change — may be closed without further explanation.
+- **Never let an LLM speak for you.** Write your PR descriptions, commit messages, and issue and review comments in your own words. AI-generated summaries tend to be long-winded, dense, and often inaccurate; we want to know what you think.
+
+## Signing off your work (recommended)
+
+To make that accountability explicit, we **recommend** signing off your commits under the [Developer Certificate of Origin](https://developercertificate.org/). By signing off on your commits, you make the contribution easier for the reviewers to trust.
+
+You sign off by adding a `Signed-off-by:` trailer to each commit, using the name you contribute under — a consistent pseudonym is fine — and a reachable email:
+
+```
+Signed-off-by: Random J Developer <random@developer.example.org>
+```
+
+Git can add this for you:
+
+```shell
+git commit -s -m "feat: ..."     # append your Signed-off-by to a new commit
+git rebase --signoff main        # add your sign-off to every commit already on your branch
+```
+
+Add the sign-off yourself — do not delegate it to an AI agent or otherwise automate it. It certifies *your own* review of the change, so having a tool apply it on your behalf defeats its purpose.
 
 ## RTL Support
 
@@ -141,25 +170,26 @@ Additionally, Elk will use [compact notation for numbers](https://developer.mozi
 
 You can run this code in your browser console to see how it works:
 ```ts
+/* eslint-disable no-unexpected-multiline, no-sequences */
 [1, 12, 123, 1234, 12345, 123456, 1234567].forEach((n) => {
   const acc = {}
 
-  Array.from(['en-US', 'en-GB', 'de-DE', 'zh-CN', 'ja-JP', 'es-ES', 'fr-FR', 'cs-CZ', 'ar-EG']).forEach((l) => {
-    const nf = new Intl.NumberFormat(l, {
-      style: 'decimal',
-      maximumFractionDigits: 0,
+    ['en-US', 'en-GB', 'de-DE', 'zh-CN', 'ja-JP', 'es-ES', 'fr-FR', 'cs-CZ', 'ar-EG'].forEach((l) => {
+      const nf = new Intl.NumberFormat(l, {
+        style: 'decimal',
+        maximumFractionDigits: 0,
+      })
+      const nf2 = new Intl.NumberFormat(l, {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 1,
+      })
+      acc[l] = {
+        number: n,
+        format: nf.format(n),
+        compact: nf2.format(n),
+      }
     })
-    const nf2 = new Intl.NumberFormat(l, {
-      notation: 'compact',
-      compactDisplay: 'short',
-      maximumFractionDigits: 1,
-    })
-    acc[l] = {
-      number: n,
-      format: nf.format(n),
-      compact: nf2.format(n),
-    }
-  })
   console.table(acc)
 })
 ```
